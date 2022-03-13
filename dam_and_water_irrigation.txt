@@ -1,0 +1,74 @@
+#include<LiquidCrystal.h>
+#include <Servo.h>
+//LiquidCrystal lcd(7,6,5,4,3,2);
+ int sensor_pin=A1;
+ int sensor_pin1=9;
+int output_value;
+int waterdisp;
+int pos = 0;
+Servo myservo;
+
+void setup() {
+  myservo.attach(3);
+  pinMode(8,OUTPUT);
+  pinMode(4,OUTPUT);
+  //lcd.begin(16,2);
+  Serial.begin(9600);
+  Serial.println("Reading from the Sensor...");
+  delay(2000);
+  
+  
+}
+
+void loop() {
+  output_value=analogRead(sensor_pin);
+  output_value=map(output_value,1023,0,0,100);
+  waterdisp=digitalRead(sensor_pin1);
+  Serial.println(waterdisp);
+  if(waterdisp==HIGH)
+  {
+     //for (pos = 0; pos <= 180; pos += 1)
+    // {                                // goes from 0 degrees to 180 degrees
+    myservo.write(pos); 
+    pos=pos+5;
+    if(pos>180)
+    {
+      pos=180;// tell servo to go to position in variable 'pos'
+    }
+  //  delay(100); 
+    // }// waits 15ms for the servo to reach the position
+  }
+  else
+  {
+   //for (pos = 180; pos >= 0; pos -= 1) 
+  // {                                          // goes from 180 degrees to 0 degrees
+    myservo.write(pos); 
+    pos=pos-5;// tell servo to go to position in variable 'pos'
+    if(pos<0)
+    {
+      pos=0;
+    }
+   // delay(100);
+ // }
+  }
+  if(output_value<5)
+  {
+    digitalWrite(8,HIGH);
+    
+  }
+  else
+  {
+    digitalWrite(8,LOW);
+  }
+  Serial.println("Soil Moisture: ");
+  Serial.print(output_value);
+
+//  lcd.setCursor(0,0);
+  //lcd.print("Soil Mois.");
+  //lcd.print(output_value);
+  //lcd.print("%");
+  
+  
+ // delay(500);
+
+}
